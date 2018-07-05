@@ -11,6 +11,10 @@ AllCops:
   TargetRubyVersion: 2.5
   TargetRailsVersion: 5.2
 
+Style/SignalException:
+  Exclude:
+    - lib/tasks/health.rake
+
 Style/FrozenStringLiteralComment:
   Exclude:
     - Gemfile

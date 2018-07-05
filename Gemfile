@@ -32,6 +32,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 3.7', '>= 3.7.2'
+  gem 'simplecov', '~> 0.16.1', require: false
 end
 
 group :development do
@@ -42,6 +43,14 @@ group :development do
 
   # Code quality
   gem 'rubocop', '~> 0.57.2', require: false
+  gem 'rubycritic', '~> 3.4'
+
+  # Performance
+  gem 'bullet', '~> 5.7', '>= 5.7.5'
+
+  # Security
+  gem 'brakeman', '~> 4.3', '>= 4.3.1'
+  gem 'bundler-audit', '~> 0.6.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
