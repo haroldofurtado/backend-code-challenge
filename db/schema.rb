@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2018_07_05_141810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "distribution_points", force: :cascade do |t|
+    t.string "origin", null: false
+    t.string "destination", null: false
+    t.decimal "distance", precision: 8, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["origin", "destination"], name: "index_distribution_points_on_origin_and_destination", unique: true
+  end
 
 end
