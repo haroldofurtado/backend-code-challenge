@@ -12,6 +12,7 @@ gem 'puma', '~> 3.11'
 
 # Business logic / constraints
 gem 'dry-types', '~> 0.13.2'
+gem 'dry-validation', '~> 0.12.0'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
