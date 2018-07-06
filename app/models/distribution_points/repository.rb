@@ -32,7 +32,7 @@ module DistributionPoints
     end
 
     def update_by_origin_and_destination(output)
-      scope = @model.where output.slice(:origin, :destination)
+      scope = @model.by_origin_and_destination(output)
 
       distance = output.slice(:distance)
 

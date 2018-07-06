@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe DistributionPoint, type: :model do
+  def create(orig, dest, dist)
+    DistributionPoint.create(origin: orig, destination: dest, distance: dist)
+  end
+
   context 'validations' do
     let(:attributes) { Hash[origin: orig, destination: dest, distance: dist] }
 
@@ -38,6 +42,34 @@ RSpec.describe DistributionPoint, type: :model do
       allow(DistributionPoints::Schemas::ToSave).to receive(:new).and_return(schema)
 
       described_class.new(origin: 'A', destination: 'B', distance: 1).valid?
+    end
+  end
+
+  context '.by_origin_and_destination' do
+    context 'with valid conditions' do
+      it do
+        record = create('A', 'B', 10)
+
+        conditions = { origin: 'A', destination: 'B' }
+
+        expect(described_class.by_origin_and_destination(conditions))
+          .to include record
+      end
+    end
+
+    context 'with invalid conditions' do
+      it do
+        invalid_conditions = [nil, 1, '', {}, []]
+
+        only_errors =
+          invalid_conditions.all? do |conditions|
+            described_class.by_origin_and_destination(conditions)
+          rescue Dry::Types::ConstraintError
+            true
+          end
+
+        expect(only_errors).to be_truthy
+      end
     end
   end
 end

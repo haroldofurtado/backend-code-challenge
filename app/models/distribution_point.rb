@@ -3,6 +3,10 @@
 class DistributionPoint < ApplicationRecord
   validate :with_schema_validation_to_save
 
+  scope :by_origin_and_destination, ->(conditions) do
+    where Types::FilledHash[conditions].slice(:origin, :destination)
+  end
+
   def with_schema_validation_to_save
     result = DistributionPoints::Schemas::ToSave.new.call(
       attributes.except('id', 'created_at', 'updated_at').symbolize_keys
