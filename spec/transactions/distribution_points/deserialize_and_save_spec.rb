@@ -19,7 +19,7 @@ RSpec.describe DistributionPoints::DeserializeAndSave, type: :transaction do
     it do
       repository = double
 
-      parsed_data = { origin: 'A', destination: 'B', distance: '1'}
+      parsed_data = { origin: 'A', destination: 'B', distance: '100'}
 
       allow(repository)
         .to receive(:create_or_update!).with(parsed_data).and_return(spy)
@@ -27,7 +27,7 @@ RSpec.describe DistributionPoints::DeserializeAndSave, type: :transaction do
       allow(DistributionPoints::Repository)
         .to receive(:new).and_return repository
 
-      expect(result_to(" A B 1 \n\r")).to be_a_success
+      expect(result_to("   A \n\r B \n\r 100   \n\r")).to be_a_success
     end
   end
 end
