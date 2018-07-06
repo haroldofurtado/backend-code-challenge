@@ -37,3 +37,6 @@ Style/RedundantReturn:
 
 Style/Lambda:
   EnforcedStyle: literal
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
