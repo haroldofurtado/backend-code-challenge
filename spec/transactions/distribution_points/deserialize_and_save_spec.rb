@@ -6,13 +6,13 @@ RSpec.describe DistributionPoints::DeserializeAndSave, type: :transaction do
   end
 
   context 'when receive invalid serialized data' do
-    it { expect(result_to(nil)).to be_a_failure }
-    it { expect(result_to('')).to be_a_failure }
-    it { expect(result_to('A 1')).to be_a_failure }
-    it { expect(result_to('A B')).to be_a_failure }
-    it { expect(result_to('AB 1')).to be_a_failure }
-    it { expect(result_to('A B C')).to be_a_failure }
-    it { expect(result_to('A B 1.')).to be_a_failure }
+    it do
+      invalid_data = [nil, '', 'A 1', 'A B', 'AB 1', 'A B C', 'A B 1.']
+
+      results = invalid_data.map &method(:result_to)
+
+      expect(results).to all( be_a_failure )
+    end
   end
 
   context 'when receive valid serialized data' do
