@@ -14,4 +14,6 @@ module Types
   TrimmedStringWithNormalizedWhitespace = Types::String.constructor do |value|
     TrimmedString[value].try { tap { |str| str.gsub!(/\s+/, ' ') } }
   end
+
+  FilledHash = Types::Strict::Hash.constrained(filled: true)
 end
