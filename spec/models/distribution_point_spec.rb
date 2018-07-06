@@ -72,4 +72,41 @@ RSpec.describe DistributionPoint, type: :model do
       end
     end
   end
+
+  context '.pick_distance_by!' do
+    context 'with valid conditions' do
+      it 'returns distance' do
+        record = create('A', 'B', 10)
+
+        conditions = { origin: 'A', destination: 'B' }
+
+        expect(described_class.pick_distance_by!(conditions))
+          .to eq 10
+      end
+
+      context 'is an empty relation' do
+        it do
+          conditions = { origin: 'A', destination: 'B' }
+
+          expect { described_class.pick_distance_by!(conditions) }
+            .to raise_error IndexError
+        end
+      end
+    end
+
+    context 'with invalid conditions' do
+      it do
+        invalid_conditions = [nil, 1, '', {}, []]
+
+        only_errors =
+          invalid_conditions.all? do |conditions|
+            described_class.pick_distance_by!(conditions)
+          rescue Dry::Types::ConstraintError
+            true
+          end
+
+        expect(only_errors).to be_truthy
+      end
+    end
+  end
 end
