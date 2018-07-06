@@ -10,4 +10,8 @@ module Types
   TrimmedString = Types::String.constructor do |str|
     str ? str.try(:strip).try { tap(&:chomp!) } : str
   end
+
+  TrimmedStringWithNormalizedWhitespace = Types::String.constructor do |value|
+    TrimmedString[value].try { tap { |str| str.gsub!(/\s+/, ' ') } }
+  end
 end
