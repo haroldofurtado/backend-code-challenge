@@ -10,7 +10,7 @@ module Types
   end
 
   TrimmedString = Types::String.constructor do |str|
-    str ? str.try(:strip).try { tap(&:chomp!) } : str
+    str.try(:strip).try { tap(&:chomp!) }
   end
 
   TrimmedStringWithNormalizedWhitespace = Types::String.constructor do |value|
