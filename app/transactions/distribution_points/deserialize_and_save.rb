@@ -14,7 +14,7 @@ module DistributionPoints
     ]
 
     def validate_serialized_data(input)
-      Types::SerializedDistributionPoint[
+      Types::DistributionPoint::Serialized[
         Types::TrimmedStringWithNormalizedWhitespace[input]
       ]
     end
