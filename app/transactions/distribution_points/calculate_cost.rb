@@ -4,26 +4,29 @@ module DistributionPoints
   class CalculateCost
     include Dry::Transaction
 
-    step :validate_params
-    try :fetch_distance_and_weight, catch: IndexError
-    map :calculate
+    map  :params_to_cost_calculation_schema
+    step :validate_schema_result
+    try  :fetch_distance_and_weight, catch: IndexError
+    map  :calculate
 
-    def validate_params(params)
-      result = Schemas::ToCostCalculation.new.call(params.to_h)
+    def params_to_cost_calculation_schema(params)
+      Schemas::ToCostCalculation.new.call(params.to_h)
+    end
 
-      result.success? ? Success(result) : Failure(:invalid_params)
+    def validate_schema_result(schema)
+      return Success(schema) if schema.success?
+
+      Failure(:invalid_params)
     end
 
     def fetch_distance_and_weight(schema)
-      [fetch_distance!(schema), schema[:weight]]
+      distance = DistributionPoint.pick_distance_by!(schema.output)
+
+      [distance, schema[:weight]]
     end
 
     def calculate((distance, weight))
       distance.to_f * weight * 0.15
-    end
-
-    def fetch_distance!(schema)
-      DistributionPoint.pick_distance_by!(schema.output)
     end
   end
 end
