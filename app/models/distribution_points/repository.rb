@@ -10,25 +10,25 @@ module DistributionPoints
     end
 
     def create_or_update!(data)
-      validate_result!(data) do |output|
-        result_to :create, @model.create!(output)
-      rescue ActiveRecord::RecordNotUnique
-        result_to :update, update_by_origin_and_destination(output)
-      end
+      output = fetch_schema_output!(data)
+
+      result_with :create, @model.create!(output)
+    rescue ActiveRecord::RecordNotUnique
+      result_with :update, update_by_origin_and_destination(output)
     end
 
     private
 
-    def result_to(action, output)
+    def result_with(action, output)
       Result.new(action, output).freeze
     end
 
-    def validate_result!(data)
+    def fetch_schema_output!(data)
       result = @base_schema.call(data)
 
       raise Dry::Validation::InvalidSchemaError if result.failure?
 
-      yield result.output
+      result.output
     end
 
     def update_by_origin_and_destination(output)
