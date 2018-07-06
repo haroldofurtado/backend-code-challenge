@@ -6,7 +6,7 @@ module DistributionPoints
 
     def initialize
       @model = ::DistributionPoint
-      @base_schema = BaseSchema.new
+      @base_schema = Schemas::ToSave.new
     end
 
     def create_or_update!(data)

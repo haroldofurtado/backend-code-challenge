@@ -49,7 +49,7 @@ RSpec.describe DistributionPoints::Repository, type: :model do
       it do
         result = double(failure?: true)
 
-        allow(DistributionPoints::BaseSchema)
+        allow(DistributionPoints::Schemas::ToSave)
           .to receive(:new).and_return double(call: result)
 
         expect { described_class.new.create_or_update!({}) }
