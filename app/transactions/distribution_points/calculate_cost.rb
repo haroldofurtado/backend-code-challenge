@@ -4,9 +4,13 @@ module DistributionPoints
   class CalculateCost
     include Dry::Transaction
 
+    SHIPPING_TAX = 0.15
+
+    private_constant :SHIPPING_TAX
+
     map  :params_to_cost_calculation_schema
     step :validate_schema_result
-    try  :fetch_distance_and_weight, catch: IndexError
+    try  :fetch_shortest_distance, catch: Dry::Types::ConstraintError
     map  :calculate
 
     def params_to_cost_calculation_schema(params)
@@ -19,14 +23,16 @@ module DistributionPoints
       Failure(:invalid_params)
     end
 
-    def fetch_distance_and_weight(schema)
-      distance = DistributionPoint.pick_distance_by!(schema.output)
+    def fetch_shortest_distance(schema, routes:)
+      algorithm = Dijkstra.new schema[:origin],
+                               schema[:destination],
+                               Types::FilledArray[routes]
 
-      [distance, schema[:weight]]
+      [Types::Numeric[algorithm.cost], schema]
     end
 
-    def calculate((distance, weight))
-      distance.to_f * weight * 0.15
+    def calculate((distance, schema))
+      distance.to_f * schema[:weight] * SHIPPING_TAX
     end
   end
 end

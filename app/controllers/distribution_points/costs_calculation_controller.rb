@@ -3,10 +3,10 @@
 module DistributionPoints
   class CostsCalculationController < ApplicationController
     def show
-      result = CalculateCost.new.call(permitted_params_to_show)
+      result = calculate_cost(fetch_permitted_params, fetch_routes)
 
       if result.success?
-        result.bind { |value| render status: :ok, plain: String(value) }
+        render status: :ok, plain: String(result.success)
       else
         render status: :bad_request, nothing: true
       end
@@ -14,8 +14,18 @@ module DistributionPoints
 
     private
 
-    def permitted_params_to_show
+    def calculate_cost(permitted_params, routes)
+      CalculateCost.new
+                   .with_step_args(fetch_shortest_distance: [routes: routes])
+                   .call(permitted_params)
+    end
+
+    def fetch_permitted_params
       params.permit(:origin, :destination, :weight)
+    end
+
+    def fetch_routes
+      DistributionPoint.pluck(:origin, :destination, :distance)
     end
   end
 end

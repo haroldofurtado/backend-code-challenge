@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe DistributionPoints::CalculateCost, type: :transaction do
-  def result_to(input)
+  ROUTES = [['A', 'B', 10], ['B', 'C', 15], ['A', 'C', 30]]
+
+  def result_to(input, routes: ROUTES)
     params = ActionController::Parameters.new(input).permit!
 
-    described_class.new.call params
+    subject.with_step_args(fetch_shortest_distance: [routes: routes])
+           .call(params)
   end
 
   context 'when receive invalid params' do
@@ -27,30 +30,20 @@ RSpec.describe DistributionPoints::CalculateCost, type: :transaction do
   context 'when receive valid params' do
     context 'and a distance wasn\'t found' do
       it do
-        expect(result_to origin: 'A', destination: 'B', weight: 50)
+        expect(result_to origin: 'A', destination: 'D', weight: 50)
           .to be_a_failure
       end
     end
 
     context 'and a distance was found' do
-      before { DistributionPoint.delete_all }
-
-      def create_distribution_point
-        DistributionPoint.create origin: 'A', destination: 'B', distance: 10
-      end
-
       it do
-        create_distribution_point
-
-        expect(result_to origin: 'A', destination: 'B', weight: 50)
+        expect(result_to origin: 'A', destination: 'C', weight: 5)
           .to be_a_success
       end
 
       it do
-        create_distribution_point
-
-        result_to(origin: 'A', destination: 'B', weight: 50).bind do |value|
-          expect(value).to eq 75.0
+        result_to(origin: 'A', destination: 'C', weight: 5).bind do |value|
+          expect(value).to eq 18.75
         end
       end
     end
