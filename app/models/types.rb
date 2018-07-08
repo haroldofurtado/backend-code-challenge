@@ -18,4 +18,8 @@ module Types
   end
 
   FilledHash = Types::Hash.constrained(filled: true)
+
+  FilledArray = Types::Array.constrained(filled: true)
+
+  Numeric = Types.Instance(::Numeric)
 end
