@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/oscartanner/dijkstra.gem.git
+  revision: 4e5e5b3ff65b6fc1740f49bd821fceee8c2cee6f
+  specs:
+    dijkstra (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -279,6 +285,7 @@ DEPENDENCIES
   bullet (~> 5.7, >= 5.7.5)
   bundler-audit (~> 0.6.0)
   byebug
+  dijkstra!
   dry-transaction (~> 0.13.0)
   dry-types (~> 0.13.2)
   dry-validation (~> 0.12.0)

@@ -11,6 +11,7 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 
 # Business logic / constraints
+gem 'dijkstra', github: 'oscartanner/dijkstra.gem'
 gem 'dry-transaction', '~> 0.13.0'
 gem 'dry-types', '~> 0.13.2'
 gem 'dry-validation', '~> 0.12.0'
