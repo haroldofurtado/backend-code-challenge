@@ -17,5 +17,5 @@ module Types
     TrimmedString[value].try { tap { |str| str.gsub!(/\s+/, ' ') } }
   end
 
-  FilledHash = Types::Strict::Hash.constrained(filled: true)
+  FilledHash = Types::Hash.constrained(filled: true)
 end
