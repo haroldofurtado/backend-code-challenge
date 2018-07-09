@@ -4,7 +4,7 @@ module Types
   include Dry::Types.module
 
   module DistributionPoint
-    Serialized = Types::Strict::String.constrained(
+    SerializedParams = Types::Strict::String.constrained(
       format: /\A.+\s.+\s\d+(\.\d{1,2})?\z/
     )
   end

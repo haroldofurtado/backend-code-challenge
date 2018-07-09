@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Types::DistributionPoint::Serialized, type: :model do
+RSpec.describe Types::DistributionPoint::SerializedParams, type: :model do
   context 'with invalid input' do
     it 'raises a constraint error' do
       invalid_data = [nil, '', 'A', 'A B', 'A B 1.']

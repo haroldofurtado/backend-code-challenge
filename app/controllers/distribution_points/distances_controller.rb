@@ -3,10 +3,17 @@
 module DistributionPoints
   class DistancesController < ApplicationController
     def create
-      result = DeserializeAndSave.new.call(request.body.read)
-      status = result.success? ? :no_content : :bad_request
+      result = deserialize_params_and_save
 
-      render status: status, nothing: true
+      render status: result.success? ? :no_content : :bad_request
+    end
+
+    private
+
+    def deserialize_params_and_save
+      DeserializeParamsAndSave
+        .new
+        .call(request.body.read)
     end
   end
 end

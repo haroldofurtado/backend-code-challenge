@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DistributionPoints::DeserializeAndSave, type: :transaction do
+RSpec.describe DistributionPoints::DeserializeParamsAndSave, type: :transaction do
   def result_to(input)
     described_class.new.call input
   end
