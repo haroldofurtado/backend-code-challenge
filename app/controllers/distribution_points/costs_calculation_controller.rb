@@ -25,7 +25,7 @@ module DistributionPoints
     end
 
     def routes_fetcher
-      -> { DistributionPoint.pluck(:origin, :destination, :distance) }
+      -> { RoutesCache.new(Rails.cache).read }
     end
   end
 end

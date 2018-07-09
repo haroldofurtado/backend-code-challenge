@@ -10,6 +10,8 @@ RSpec.describe 'GET /cost', type: :request do
   end
 
   context 'with invalid params' do
+    before { Rails.cache.clear }
+
     it { expect(response_for('', '', '').body).to be_blank }
     it { expect(response_for('', '', '').status).to eq 400 }
     it { expect(response_for('A', '', '').status).to eq 400 }
@@ -22,6 +24,7 @@ RSpec.describe 'GET /cost', type: :request do
 
   context 'with valid params' do
     before do
+      Rails.cache.clear
       DistributionPoint.delete_all
 
       [
@@ -31,12 +34,24 @@ RSpec.describe 'GET /cost', type: :request do
       ].each &DistributionPoint.method(:create!)
     end
 
-    it { expect(response_for('A', 'C', '5').status).to eq 200 }
-    it { expect(response_for('A', 'C', '5').body).to eq '18.75' }
-
-    context 'and a distance was found' do
+    context 'and a distance wasn\'t found' do
       it { expect(response_for('A', 'D', '5').status).to eq 404 }
       it { expect(response_for('A', 'D', '5').body).to be_blank }
+    end
+
+    context 'and a distance was found' do
+      it { expect(response_for('A', 'C', '5').status).to eq 200 }
+      it { expect(response_for('A', 'C', '5').body).to eq '18.75' }
+      it 'reads from routes cache' do
+        routes_cache = spy
+
+        allow(DistributionPoints::RoutesCache)
+          .to receive(:new).and_return(routes_cache)
+
+        response_for('A', 'C', '5')
+
+        expect(routes_cache).to have_received(:read)
+      end
     end
   end
 end
