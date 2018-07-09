@@ -35,7 +35,7 @@ RSpec.describe 'GET /cost', type: :request do
     it { expect(response_for('A', 'C', '5').body).to eq '18.75' }
 
     context 'and a distance was found' do
-      it { expect(response_for('A', 'D', '5').status).to eq 400 }
+      it { expect(response_for('A', 'D', '5').status).to eq 404 }
       it { expect(response_for('A', 'D', '5').body).to be_blank }
     end
   end

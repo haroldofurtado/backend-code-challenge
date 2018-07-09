@@ -10,7 +10,8 @@ module DistributionPoints
 
     map  :params_to_cost_calculation_schema
     step :validate_schema_result
-    try  :fetch_shortest_distance, catch: Dry::Types::ConstraintError
+    try  :build_shortest_path_finder, catch: Dry::Types::ConstraintError
+    step :fetch_shortest_distance
     map  :calculate
 
     def params_to_cost_calculation_schema(params)
@@ -23,12 +24,18 @@ module DistributionPoints
       Failure(:invalid_params)
     end
 
-    def fetch_shortest_distance(schema, routes:)
+    def build_shortest_path_finder(schema, routes:)
       algorithm = Dijkstra.new schema[:origin],
                                schema[:destination],
                                Types::FilledArray[routes]
 
-      [Types::Numeric[algorithm.cost], schema]
+      [algorithm, schema]
+    end
+
+    def fetch_shortest_distance((algorithm, schema))
+      Success [Types::Numeric[algorithm.cost], schema]
+    rescue Dry::Types::ConstraintError
+      Failure(:not_found)
     end
 
     def calculate((distance, schema))

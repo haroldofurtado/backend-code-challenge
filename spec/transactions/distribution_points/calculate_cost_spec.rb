@@ -6,7 +6,7 @@ RSpec.describe DistributionPoints::CalculateCost, type: :transaction do
   def result_to(input, routes: ROUTES)
     params = ActionController::Parameters.new(input).permit!
 
-    subject.with_step_args(fetch_shortest_distance: [routes: routes])
+    subject.with_step_args(build_shortest_path_finder: [routes: routes])
            .call(params)
   end
 

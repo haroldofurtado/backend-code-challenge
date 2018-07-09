@@ -8,7 +8,7 @@ module DistributionPoints
       if result.success?
         render status: :ok, plain: String(result.success)
       else
-        render status: :bad_request, nothing: true
+        render status: result.failure == :not_found ? :not_found : :bad_request
       end
     end
 
@@ -16,7 +16,7 @@ module DistributionPoints
 
     def calculate_cost(permitted_params, routes)
       CalculateCost.new
-                   .with_step_args(fetch_shortest_distance: [routes: routes])
+                   .with_step_args(build_shortest_path_finder: [routes: routes])
                    .call(permitted_params)
     end
 
