@@ -27,7 +27,7 @@ module DistributionPoints
     def build_shortest_path_finder(schema, routes:)
       algorithm = Dijkstra.new schema[:origin],
                                schema[:destination],
-                               Types::FilledArray[routes]
+                               Types::FilledArray[routes.call]
 
       [algorithm, schema]
     end

@@ -3,7 +3,7 @@
 module DistributionPoints
   class CostsCalculationController < ApplicationController
     def show
-      result = calculate_cost(fetch_permitted_params, fetch_routes)
+      result = calculate_cost(fetch_permitted_params, routes_fetcher)
 
       if result.success?
         render status: :ok, plain: String(result.success)
@@ -24,8 +24,8 @@ module DistributionPoints
       params.permit(:origin, :destination, :weight)
     end
 
-    def fetch_routes
-      DistributionPoint.pluck(:origin, :destination, :distance)
+    def routes_fetcher
+      -> { DistributionPoint.pluck(:origin, :destination, :distance) }
     end
   end
 end
