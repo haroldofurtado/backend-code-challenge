@@ -13,6 +13,7 @@ module DistributionPoints
     def deserialize_params_and_save
       DeserializeParamsAndSave
         .new
+        .with_step_args(delete_routes_cache: [RoutesCache.new(Rails.cache)])
         .call(request.body.read)
     end
   end

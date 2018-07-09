@@ -14,6 +14,7 @@ module DistributionPoints
     try :validate_serialized_params, catch: Dry::Types::ConstraintError
     map :parse_distribution_point
     try :save, catch: ALLOWED_ERRORS_TO_SAVE
+    map :delete_routes_cache
 
     def validate_serialized_params(input)
       Types::DistributionPoint::SerializedParams[
@@ -27,6 +28,14 @@ module DistributionPoints
 
     def save(distribution_point_params)
       Repository.new.create_or_update!(distribution_point_params)
+    end
+
+    def delete_routes_cache(repository_result, routes_cache)
+      repository_result.tap do |result|
+        act, output = *result
+        database_was_touched = act == :create || act == :update && output == 1
+        routes_cache.delete if database_was_touched
+      end
     end
   end
 end
