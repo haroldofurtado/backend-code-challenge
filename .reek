@@ -71,7 +71,8 @@ Syntax:
   exclude: []
 TooManyConstants:
   enabled: true
-  exclude: []
+  exclude:
+    - Types
   max_constants: 5
 TooManyInstanceVariables:
   enabled: true

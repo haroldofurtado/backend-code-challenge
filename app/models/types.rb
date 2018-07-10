@@ -3,11 +3,11 @@
 module Types
   include Dry::Types.module
 
-  module DistributionPoint
-    SerializedParams = Types::Strict::String.constrained(
-      format: /\A.+\s.+\s\d+(\.\d{1,2})?\z/
-    )
-  end
+  Numeric = Types.Instance(::Numeric)
+
+  FilledHash = Types::Hash.constrained(filled: true)
+
+  FilledArray = Types::Array.constrained(filled: true)
 
   TrimmedString = Types::String.constructor do |str|
     str.try(:strip).try { tap(&:chomp!) }
@@ -17,9 +17,9 @@ module Types
     TrimmedString[value].try { tap { |str| str.gsub!(/\s+/, ' ') } }
   end
 
-  FilledHash = Types::Hash.constrained(filled: true)
-
-  FilledArray = Types::Array.constrained(filled: true)
-
-  Numeric = Types.Instance(::Numeric)
+  module DistributionPoint
+    SerializedParams = Types::Strict::String.constrained(
+      format: /\A.+\s.+\s\d+(\.\d{1,2})?\z/
+    )
+  end
 end

@@ -4,8 +4,6 @@ module DistributionPoints
   class RoutesCache
     KEY = 'distribution-points:routes'
 
-    private_constant :KEY
-
     def initialize(cache)
       @cache = cache
       @model = ::DistributionPoint
@@ -33,5 +31,7 @@ module DistributionPoints
     def fetch_canonical_data
       @model.pluck(:origin, :destination, :distance)
     end
+
+    private_constant :KEY
   end
 end
