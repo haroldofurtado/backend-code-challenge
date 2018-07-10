@@ -43,14 +43,15 @@ RSpec.describe 'GET /cost', type: :request do
       it { expect(response_for('A', 'C', '5').status).to eq 200 }
       it { expect(response_for('A', 'C', '5').body).to eq '18.75' }
       it 'reads from routes cache' do
-        routes_cache = spy
+        routes_cache = double
+
+        allow(routes_cache)
+          .to receive(:read).and_return([['A', 'C', BigDecimal('5')]])
 
         allow(DistributionPoints::RoutesCache)
           .to receive(:new).and_return(routes_cache)
 
         response_for('A', 'C', '5')
-
-        expect(routes_cache).to have_received(:read)
       end
     end
   end

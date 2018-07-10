@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module DistributionPoints
-  module Schemas
+  module ParamsSchema
 
-    class Params < Dry::Validation::Schema::Params
+    class Base < Dry::Validation::Schema::Params
       configure { |config| config.type_specs = true }
     end
 
-    private_constant :Params
-
+    # Workaround because of an issue with coercion when reusing schemas.
+    # https://github.com/dry-rb/dry-validation/issues/340
     BASE_DEFINITIONS = <<~RUBY
       required(:origin, Types::TrimmedString).filled(:str?, min_size?: 1)
 
@@ -19,13 +19,10 @@ module DistributionPoints
       end
     RUBY
 
-    private_constant :BASE_DEFINITIONS
-
-    class ToSave < Params
+    class ToSave < Base
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
         define! do
           #{BASE_DEFINITIONS}
-
           required(:distance, Types::Coercible::Decimal).filled(
             :decimal?, gt?: 0, lteq?: 100_000
           )
@@ -33,17 +30,18 @@ module DistributionPoints
       RUBY
     end
 
-    class ToCostCalculation < Params
+    class ToCalculateShippingCost < Base
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
         define! do
           #{BASE_DEFINITIONS}
-
           required(:weight, Types::Coercible::Int).filled(
             :int?, gt?: 0, lteq?: 50
           )
         end
       RUBY
     end
+
+    private_constant :Base, :BASE_DEFINITIONS
 
   end
 end

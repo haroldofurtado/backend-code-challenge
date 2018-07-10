@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'POST /distance', type: :request do
   def response_status_for(params)
-    allow(DistributionPoints::Repository).to receive(:new).and_return spy
+    allow(DistributionPoints::RepositoryCommands::CreateOrUpdate)
+      .to receive(:new).and_return spy
 
     post distribution_points_distance_path, params: params
 

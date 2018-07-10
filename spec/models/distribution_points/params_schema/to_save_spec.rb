@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe DistributionPoints::Schemas::ToCostCalculation, type: :model do
-  def result_to(orig, dest, weight)
-    subject.call origin: orig, destination: dest, weight: weight
+RSpec.describe DistributionPoints::ParamsSchema::ToSave, type: :model do
+  def result_to(orig, dest, dist)
+    subject.call origin: orig, destination: dest, distance: dist
   end
 
   context 'with invalid data' do
@@ -34,15 +34,15 @@ RSpec.describe DistributionPoints::Schemas::ToCostCalculation, type: :model do
       end
     end
 
-    context 'invalid weight' do
-      def input_with(weight)
-        result_to('A', 'B', weight)
+    context 'invalid distance' do
+      def input_with(distance)
+        result_to('A', 'B', distance)
       end
 
       it do
-        invalid_weights = [{}, [], '', '1.', nil, " \n\r", 0, 51]
+        invalid_distances = [{}, [], '', '1.', nil, " \n\r", 0, 100_001]
 
-        results = invalid_weights.map &method(:input_with)
+        results = invalid_distances.map &method(:input_with)
 
         expect(results).to all( be_a_failure )
       end
@@ -60,27 +60,29 @@ RSpec.describe DistributionPoints::Schemas::ToCostCalculation, type: :model do
     end
   end
 
-  context 'weight value coercion' do
-    def weight(value)
-      result_to('A', 'B', value)[:weight]
+  context 'distance value coercion' do
+    def distance(value)
+      result_to('A', 'B', value)[:distance]
+    end
+
+    let(:decimal_values) { decimals = %w[1 1.1 1.15].map &method(:BigDecimal) }
+
+    it do
+      distances = [1, 1.1, 1.15].map &method(:distance)
+
+      expect(distances).to match_array( decimal_values )
     end
 
     it do
-      weights = [1, 1.1, 1.15].map &method(:weight)
+      distances = %w[1 1.1 1.15].map &method(:distance)
 
-      expect(weights).to all( be_eq 1 )
-    end
-
-    it do
-      weights = %w[1 1.1 1.15].map &method(:weight)
-
-      expect(weights).to all( be_eq 1 )
+      expect(distances).to match_array( decimal_values )
     end
   end
 
   it do
-    expect(result_to('A', 'B', 50).output)
-      .to include origin: 'A', destination: 'B', weight: 50
+    expect(result_to('A', 'B', 100_000).output)
+      .to include origin: 'A', destination: 'B', distance: BigDecimal('100000')
   end
 
   it do

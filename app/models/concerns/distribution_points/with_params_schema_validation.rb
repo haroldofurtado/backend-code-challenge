@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module DistributionPoints
-  module SchemaValidation
+  module WithParamsSchemaValidation
     extend ActiveSupport::Concern
 
     included do
-      validate :with_schema_validation_to_save
+      validate :with_params_schema_validation
     end
 
     private
 
-    def with_schema_validation_to_save
-      result = Schemas::ToSave.new.call(
+    def with_params_schema_validation
+      result = ParamsSchema::ToSave.new.call(
         attributes.except('id', 'created_at', 'updated_at').symbolize_keys
       )
 

@@ -30,7 +30,7 @@ RSpec.describe DistributionPoint, type: :model do
       it { expect(subject.tap(&:valid?).errors).to include :distance }
     end
 
-    it 'invokes DistributionPoints::Schemas::ToSave' do
+    it 'invokes DistributionPoints::ParamsSchema::ToSave' do
       data = { origin: 'A', destination: 'B', distance: 1 }
       result = double
       schema = double
@@ -39,7 +39,7 @@ RSpec.describe DistributionPoint, type: :model do
 
       expect(schema).to receive(:call).with(data).and_return(result)
 
-      allow(DistributionPoints::Schemas::ToSave).to receive(:new).and_return(schema)
+      allow(DistributionPoints::ParamsSchema::ToSave).to receive(:new).and_return(schema)
 
       described_class.new(origin: 'A', destination: 'B', distance: 1).valid?
     end

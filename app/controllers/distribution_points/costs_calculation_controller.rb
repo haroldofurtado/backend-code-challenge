@@ -3,7 +3,7 @@
 module DistributionPoints
   class CostsCalculationController < ApplicationController
     def show
-      result = calculate_cost(fetch_permitted_params, routes_fetcher)
+      result = result_for(CalculateShippingCost.new)
 
       if result.success?
         render status: :ok, plain: String(result.success)
@@ -14,18 +14,12 @@ module DistributionPoints
 
     private
 
-    def calculate_cost(permitted_params, routes)
-      CalculateCost.new
-                   .with_step_args(build_shortest_path_finder: [routes: routes])
-                   .call(permitted_params)
-    end
+    def result_for(transaction)
+      routes_fetcher = -> { RoutesCache.new(Rails.cache).read }
+      permitted_params = params.permit(:origin, :destination, :weight)
 
-    def fetch_permitted_params
-      params.permit(:origin, :destination, :weight)
-    end
-
-    def routes_fetcher
-      -> { RoutesCache.new(Rails.cache).read }
+      transaction.with_step_args(fetch_routes: [routes_fetcher: routes_fetcher])
+                 .call(permitted_params)
     end
   end
 end

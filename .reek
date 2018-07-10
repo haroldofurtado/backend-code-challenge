@@ -129,6 +129,6 @@ UnusedPrivateMethod:
 UtilityFunction:
   enabled: true
   exclude:
-    - DistributionPoints::CalculateCost
-    - DistributionPoints::DeserializeAndSave
+    - DistributionPoints::CalculateShippingCost
+    - DistributionPoints::DeserializeParamsAndSave
   public_methods_only: false

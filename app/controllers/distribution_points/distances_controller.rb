@@ -3,18 +3,19 @@
 module DistributionPoints
   class DistancesController < ApplicationController
     def create
-      result = deserialize_params_and_save
+      result = result_for(DeserializeParamsAndSave.new)
 
       render status: result.success? ? :no_content : :bad_request
     end
 
     private
 
-    def deserialize_params_and_save
-      DeserializeParamsAndSave
-        .new
-        .with_step_args(delete_routes_cache: [RoutesCache.new(Rails.cache)])
-        .call(request.body.read)
+    def result_for(transaction)
+      routes_cache = RoutesCache.new(Rails.cache)
+      serialized_params = request.body.read
+
+      transaction.with_step_args(handle_routes_cache: [routes_cache])
+                 .call(serialized_params)
     end
   end
 end

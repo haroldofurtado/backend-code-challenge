@@ -1,12 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe DistributionPoints::CalculateCost, type: :transaction do
-  ROUTES = -> { [['A', 'B', 10], ['B', 'C', 15], ['A', 'C', 30]] }
-
-  def result_to(input, routes: ROUTES)
+RSpec.describe DistributionPoints::CalculateShippingCost, type: :transaction do
+  def result_to(input)
     params = ActionController::Parameters.new(input).permit!
+    routes_fetcher = -> { [['A', 'B', 10], ['B', 'C', 15], ['A', 'C', 30]] }
 
-    subject.with_step_args(build_shortest_path_finder: [routes: routes])
+    subject.with_step_args(fetch_routes: [routes_fetcher: routes_fetcher])
            .call(params)
   end
 

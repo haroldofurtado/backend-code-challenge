@@ -1,11 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe DistributionPoints::Repository, type: :model do
-  describe '#create_or_update!' do
+RSpec.describe DistributionPoints::RepositoryCommands::CreateOrUpdate,
+               type: :model do
+  describe '#call' do
     before { DistributionPoint.delete_all }
 
     def result_to(input)
-      described_class.new.create_or_update! input
+      described_class.new.call(input)
     end
 
     def output_of(input)
@@ -49,10 +50,10 @@ RSpec.describe DistributionPoints::Repository, type: :model do
       it do
         result = double(failure?: true)
 
-        allow(DistributionPoints::Schemas::ToSave)
+        allow(DistributionPoints::ParamsSchema::ToSave)
           .to receive(:new).and_return double(call: result)
 
-        expect { described_class.new.create_or_update!({}) }
+        expect { described_class.new.call({}) }
           .to raise_error Dry::Validation::InvalidSchemaError
       end
     end

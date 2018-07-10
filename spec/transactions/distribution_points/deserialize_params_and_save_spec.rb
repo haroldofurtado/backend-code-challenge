@@ -4,7 +4,7 @@ RSpec.describe DistributionPoints::DeserializeParamsAndSave, type: :transaction 
   def result_to(input, routes_cache_step_arg: nil)
     described_class
       .new
-      .with_step_args(delete_routes_cache: [routes_cache_step_arg || spy])
+      .with_step_args(handle_routes_cache: [routes_cache_step_arg || spy])
       .call input
   end
 
@@ -22,11 +22,10 @@ RSpec.describe DistributionPoints::DeserializeParamsAndSave, type: :transaction 
     def mock_repository_with(parsed_params, repository_result = nil)
       repository = double
 
-      allow(repository)
-        .to receive(:create_or_update!).with(parsed_params)
-                                       .and_return(repository_result || spy)
+      allow(repository).to receive(:call).with(parsed_params)
+                                         .and_return(repository_result || spy)
 
-      allow(DistributionPoints::Repository)
+      allow(DistributionPoints::RepositoryCommands::CreateOrUpdate)
         .to receive(:new).and_return repository
     end
 
@@ -42,7 +41,8 @@ RSpec.describe DistributionPoints::DeserializeParamsAndSave, type: :transaction 
       let(:parsed_params) { { origin: 'A', destination: 'B', distance: '100' } }
 
       def repository_result(action, ouput)
-        DistributionPoints::Repository::Result.new(action, output)
+        DistributionPoints::RepositoryCommands::CreateOrUpdate::Result
+          .new(action, output)
       end
 
       context 'when create a distribution point' do
