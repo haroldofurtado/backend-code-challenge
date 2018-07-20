@@ -150,7 +150,7 @@ São três:
 
 1. Todo side-effect de escrita e atualização é concentrado nele. Ou seja, não há nenhum ponto da aplicação que modifique o estado do sistema que não eles.
 2. Dado o ponto anterior, ganhamos o fato de que toda e qualquer exceção/inconsistência de regra de negócio estará contida em uma transaction.
-3. Todas as operações de side-effects estão nas últimas etapas (step) das transactions. Ou seja, o side-effect será produto da computação realizada anteriormente. Assim sendo, todo estado inconsistente (ouput) terá uma relação direta com a transformação (funções puras) ocorridas nas computações realizadas antes do output/etapa final.
+3. Todas as operações de side-effects estão nas últimas etapas (step) das transactions. Ou seja, o side-effect será produto da computação realizada anteriormente. Assim sendo, todo estado inconsistente (output) terá uma relação direta com a transformação (funções puras) ocorridas nas computações realizadas antes do output/etapa final.
 
 PS: Uma consequência natural da abordagem acima é que os models passam a ser somente leitura, já que os side-effects que mutam o estado estão concentrados nas transactions.
 
@@ -165,7 +165,7 @@ PS: Verifique `app/models/types.rb`
 ### Possíveis melhorias
 
 * Otimizar o uso do algoritmo dijkstra. Ex: Realizar benchmark com outras implementações, utilizar [Neo4J](https://neo4j.com/blog/graph-compute-neo4j-algorithms-spark-extensions/).
-* Dependendo da estratégia acima e a continuidade do uso do Redis, fazer uso [do LRU cache](https://redis.io/topics/lru-cache) para gerenciar o volume de dados em cache.
+* Dependendo da estratégia acima e a continuidade do uso do Redis, fazer uso [do LRU cache](https://redis.io/topics/lru-cache) para gerenciar armazenamento do volume de dados.
 * Garantir a existência dos pontos de origem e destino antes de tentar calcular o custo (GET /cost) quando a requisição receber parâmetros válidos.
 * Configurar CI (Travis), monitoramento (New Relic), error tracker (Airbrake), qualidade (Codeclimate).
 
