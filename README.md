@@ -1,4 +1,4 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/2fcd0e1d5e3144a903b5/maintainability)](https://codeclimate.com/github/serradura/ra-trustvox-backend-engineer-challenge/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5dcba15973fe8c52e03c/maintainability)](https://codeclimate.com/github/serradura/backend-code-challenge/maintainability)
 
 # Shipping cost API
 
